@@ -2,9 +2,246 @@ html,
 body,
 div {
   margin: 0;
-  padding: 0;
   border: 0;
   font-size: 100%;
   font: inherit;
   vertical-align: baseline;
 }
+
+
+#mydiv0 {
+  position: absolute;
+  z-index: 9;
+}
+
+#mydivheader0 {
+  padding: 10px;
+  cursor: move;
+  z-index: 10;
+}
+
+#mydiv1 {
+  position: absolute;
+  z-index: 11;
+}
+
+#mydiv1header {
+  padding: 10px;
+  cursor: move;
+  z-index: 12;
+}
+
+#mydiv2 {
+  position: absolute;
+  z-index: 13;
+}
+
+#mydiv2header {
+  padding: 10px;
+  cursor: move;
+  z-index: 14;
+}
+
+#mydiv3 {
+  position: absolute;
+  z-index: 15;
+}
+
+#mydiv3header {
+  padding: 10px;
+  cursor: move;
+  z-index: 16;
+}
+
+#mydiv4 {
+  position: absolute;
+  z-index: 17;
+}
+
+#mydiv4header {
+  padding: 10px;
+  cursor: move;
+  z-index: 18;
+}
+
+#mydiv5 {
+  position: absolute;
+  z-index: 19;
+  text-align: center;
+}
+
+.mydiv5header {
+  padding: 10px;
+  cursor: move;
+  z-index: 20;
+}
+
+#mydiv5 {
+  position: absolute;
+  z-index: 21;
+  text-align: center;
+}
+
+.mydiv5header {
+  padding: 10px;
+  cursor: move;
+  z-index: 22;
+}
+
+#mydiv6{
+  position: absolute;
+  z-index: 23;
+  text-align: center;
+}
+
+.mydiv6header {
+  padding: 10px;
+  cursor: move;
+  z-index: 24;
+}
+
+#mydiv7{
+  position: absolute;
+  z-index: 25;
+  text-align: center;
+}
+
+.mydiv7header {
+  padding: 10px;
+  cursor: move;
+  z-index: 26;
+}
+
+#mydiv8 {
+  position: absolute;
+  z-index: 27;
+  text-align: center;
+}
+
+.mydiv8header {
+  padding: 10px;
+  cursor: move;
+  z-index: 28;
+}
+
+#mydiv9 {
+  position: absolute;
+  z-index: 29;
+  text-align: center;
+}
+
+.mydiv9header {
+  padding: 10px;
+  cursor: move;
+  z-index: 30;
+}
+
+#mydiv10 {
+  position: absolute;
+  z-index: 31;
+  text-align: center;
+}
+
+.mydiv10header {
+  padding: 10px;
+  cursor: move;
+  z-index: 32;
+}
+
+#mydiv11 {
+  position: absolute;
+  z-index: 33;
+  text-align: center;
+}
+
+.mydiv11header {
+  padding: 10px;
+  cursor: move;
+  z-index: 34;
+}
+
+#mydiv12 {
+  position: absolute;
+  z-index: 35;
+  text-align: center;
+}
+
+.mydiv12header {
+  padding: 10px;
+  cursor: move;
+  z-index: 36;
+}
+
+#mydiv13 {
+  position: absolute;
+  z-index: 37;
+  text-align: center;
+}
+
+.mydiv13header {
+  padding: 10px;
+  cursor: move;
+  z-index: 38;
+}
+.fieldName { 
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 75px;
+  background-color: azure;
+  color:black;
+  background: #f4f4f4;
+  border: 1px solid #ddd;
+  border-left: 3px solid #f36d33;
+  color: #666;
+  page-break-inside: avoid;
+  font-family: monospace;
+  font-size: 11px;
+  line-height: 1;
+  margin-bottom: 1em;
+  max-width: 100%;
+  overflow: auto;
+  padding: 1em 1.5em;
+  display: block;
+  word-wrap: break-word;
+}
+
+.container {
+  background-color: #3d698b;
+  border: 1px solid #d3d3d3;
+  min-width: 200px;
+  min-height: 20px;
+  max-width: 700px;
+  color: #fff;
+  resize: both;
+  overflow: auto;
+  padding-top:10px;
+}
+
+.containerItem {
+  height: inherit;
+}
+
+li
+{
+    vertical-align:middle;
+    list-style: none;
+}
+
+code {
+  background: #5e4c4c;
+  border: 1px solid #ddd;
+  border-left: 3px solid #220d8a;
+  color: #fff;
+  page-break-inside: avoid;
+  font-family: monospace;
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 1.6em;
+  max-width: 100%;
+  overflow: auto;
+  padding: 1em 1.5em;
+  display: block;
+  word-wrap: break-word;
+}
+
