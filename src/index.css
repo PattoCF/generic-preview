@@ -12,6 +12,7 @@ div {
 #mydiv0 {
   position: absolute;
   z-index: 9;
+  display: none;
 }
 
 #mydivheader0 {
@@ -23,6 +24,7 @@ div {
 #mydiv1 {
   position: absolute;
   z-index: 11;
+  display: none;
 }
 
 #mydiv1header {
@@ -34,6 +36,7 @@ div {
 #mydiv2 {
   position: absolute;
   z-index: 13;
+  display: none;
 }
 
 #mydiv2header {
@@ -45,6 +48,7 @@ div {
 #mydiv3 {
   position: absolute;
   z-index: 15;
+  display: none;
 }
 
 #mydiv3header {
@@ -56,6 +60,7 @@ div {
 #mydiv4 {
   position: absolute;
   z-index: 17;
+  display: none;
 }
 
 #mydiv4header {
@@ -67,19 +72,21 @@ div {
 #mydiv5 {
   position: absolute;
   z-index: 19;
-  text-align: center;
+  display: none;
 }
 
 .mydiv5header {
   padding: 10px;
   cursor: move;
   z-index: 20;
+  
 }
 
 #mydiv5 {
   position: absolute;
   z-index: 21;
   text-align: center;
+  display: none;
 }
 
 .mydiv5header {
@@ -92,6 +99,7 @@ div {
   position: absolute;
   z-index: 23;
   text-align: center;
+  display: none;
 }
 
 .mydiv6header {
@@ -104,6 +112,7 @@ div {
   position: absolute;
   z-index: 25;
   text-align: center;
+  display: none;
 }
 
 .mydiv7header {
@@ -116,6 +125,7 @@ div {
   position: absolute;
   z-index: 27;
   text-align: center;
+  display: none;
 }
 
 .mydiv8header {
@@ -128,6 +138,7 @@ div {
   position: absolute;
   z-index: 29;
   text-align: center;
+  display: none;
 }
 
 .mydiv9header {
@@ -140,6 +151,7 @@ div {
   position: absolute;
   z-index: 31;
   text-align: center;
+  display: none;
 }
 
 .mydiv10header {
@@ -152,6 +164,7 @@ div {
   position: absolute;
   z-index: 33;
   text-align: center;
+  display: none;
 }
 
 .mydiv11header {
@@ -164,6 +177,7 @@ div {
   position: absolute;
   z-index: 35;
   text-align: center;
+  display: none;
 }
 
 .mydiv12header {
@@ -176,6 +190,7 @@ div {
   position: absolute;
   z-index: 37;
   text-align: center;
+  display: none;
 }
 
 .mydiv13header {
@@ -187,7 +202,7 @@ div {
   position: absolute;
   top: 0px;
   right: 0px;
-  width: 75px;
+  width: auto;
   background-color: azure;
   color:black;
   background: #f4f4f4;
@@ -201,7 +216,7 @@ div {
   margin-bottom: 1em;
   max-width: 100%;
   overflow: auto;
-  padding: 1em 1.5em;
+  padding: 5px 12px 2px 5px;
   display: block;
   word-wrap: break-word;
 }
@@ -209,7 +224,7 @@ div {
 .container {
   background-color: #3d698b;
   border: 1px solid #d3d3d3;
-  min-width: 200px;
+  min-width: 300px;
   min-height: 20px;
   max-width: 700px;
   color: #fff;
@@ -220,14 +235,24 @@ div {
 
 .containerItem {
   height: inherit;
+  text-align: left;
+  padding-left: 10px;
 }
 
-li
+.contentTypes
 {
     vertical-align:middle;
     list-style: none;
+    padding: 5px;
 }
 
+.toggleElment
+{
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  cursor: pointer;
+}
 code {
   background: #5e4c4c;
   border: 1px solid #ddd;
@@ -245,3 +270,29 @@ code {
   word-wrap: break-word;
 }
 
+blockquote {
+  background: #f9f9f9;
+  border-left: 10px solid #ccc;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+  quotes: "\201C""\201D""\2018""\2019";
+  color:black
+}
+
+blockquote:before {
+  color: #ccc;
+  content: open-quote;
+  font-size: 4em;
+  line-height: 0.1em;
+  margin-right: 0.25em;
+  vertical-align: -0.4em;
+}
+
+.dot {
+  height: 10px;
+  width: 10px;
+  background-color: red;
+  border-radius: 50%;
+  display: inline-block;
+  margin-left: 5px;
+}
