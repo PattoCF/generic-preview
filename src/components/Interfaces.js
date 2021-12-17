@@ -6,11 +6,7 @@ export interface EditorProps {
 }
 
 export interface EntryOrAsset {
-  entry?: {
-    entry: Entry,
-    contentType: ContentType,
-    displayField: string
-  },
+  entry?: EntryState,
   asset?: Asset
 }
 
@@ -19,11 +15,7 @@ export interface WrapperProps {
   id?: string,
   linkType?: string,
   data?: EntryOrAsset,
-  entry?: {
-    entry: Entry,
-    contentType: ContentType,
-    displayField: string
-  },
+  entry?: EntryState,
   asset?: Asset
 }
 
@@ -38,3 +30,10 @@ export interface EntryState {
   displayField?: string
 }
 
+export interface LinkProps {
+  sys: {
+    id: string,
+    type: 'Link',
+    linkType: 'Asset' | 'Entry'
+  }
+}
