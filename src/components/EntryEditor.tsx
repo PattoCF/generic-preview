@@ -1,76 +1,10 @@
 import React from 'react'
 import  ReactDOMServer  from 'react-dom/server'
 import { Workbench, Typography, Button, HelpText, Select,Option } from '@contentful/forma-36-react-components'
-import { EditorExtensionSDK } from '@contentful/app-sdk'
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
-import { Asset, Entry, ContentType } from '@contentful/field-editor-shared'
-
-interface EditorProps {
-  sdk: EditorExtensionSDK,
-}
-
-interface EntryOrAsset {
-  entry?: {
-    entry: Entry,
-    contentType: ContentType,
-    displayField: string
-  },
-  asset?: Asset
-}
-
-interface WrapperProps {
-  sdk: EditorExtensionSDK,
-  id?: string,
-  linkType?: string,
-  data?: EntryOrAsset,
-  entry?: {
-    entry: Entry,
-    contentType: ContentType,
-    displayField: string
-  },
-  asset?: Asset
-}
-
-interface ConfigState {
-  fields: object,
-  entry: any
-}
-
-interface EntryState {
-  entry?: Entry,
-  contentType?: ContentType,
-  displayField?: string
-}
-
-class LinkWrapper extends React.Component<WrapperProps> {
-  render() {
-    if (this.props.linkType === 'Asset') {
-      return <AssetWrapper id={this.props.id} sdk={this.props.sdk} asset={this.props.data?.asset} />
-    } else if (this.props.linkType === 'Entry') {
-      return <EntryWrapper id={this.props.id} sdk={this.props.sdk} entry={this.props.data?.entry} />
-    } else {
-      return <></>
-    }
-  }
-}
-
-class AssetWrapper extends React.Component <WrapperProps> {
-  render() {
-    return ((this.props.asset && (
-      <img src={this.props.asset.fields.file[this.props.sdk.locales.default].url} alt={this.props.asset.fields.title[this.props.sdk.locales.default]} />
-    )) || <></>)
-  }
-}
-
-class EntryWrapper extends React.Component <WrapperProps, EntryState> {
-  render() {
-    return ((this.props.entry?.entry && (<>
-      Links to <a href={"https://app.contentful.com/spaces/" + this.props.sdk.ids.space + "/entries/" + this.props.id} target="_new">
-        {this.props.entry?.entry.fields[this.props.entry.displayField || ''][this.props.sdk.locales.default]}
-      </a> [{this.props.entry?.contentType?.name || ''}]
-    </>)) || <></>)
-  }
-}
+import { EditorProps, EntryOrAsset, ConfigState } from './Interfaces.js'
+import { Entry, ContentType } from '@contentful/field-editor-shared'
+import { LinkWrapper } from './LinkWrapper'
 
 export default class EntryEditor extends React.Component <EditorProps, ConfigState> {
   async componentDidMount() {
