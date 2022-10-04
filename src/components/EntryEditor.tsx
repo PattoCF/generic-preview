@@ -38,7 +38,7 @@ export default class EntryEditor extends React.Component <EditorProps, ConfigSta
         let long = fieldValue.lon
         return '<img src="https://maps.googleapis.com/maps/api/staticmap?center='
           + lat + ',' + long + '&zoom=12&size=200x200&markers=color:red%7Clabel:Location%7C'
-          + lat + ',' + long + '&key=AIzaSyDKWGl_R9LCIbyDfjd4HWAJXlA-i40HFLo" />'
+          + lat + ',' + long + '&key=yourAPIKey" />'
       case 'Boolean':
         return fieldValue ? 'true' : 'false'
       case 'Link':
