@@ -1,76 +1,10 @@
 import React from 'react'
 import  ReactDOMServer  from 'react-dom/server'
 import { Workbench, Typography, Button, HelpText, Select,Option } from '@contentful/forma-36-react-components'
-import { EditorExtensionSDK } from '@contentful/app-sdk'
 import { documentToHtmlString } from '@contentful/rich-text-html-renderer'
+import { EditorProps, EntryOrAsset, ConfigState, LinkProps, EntryState } from './Interfaces.js'
 import { Asset, Entry, ContentType } from '@contentful/field-editor-shared'
-
-interface EditorProps {
-  sdk: EditorExtensionSDK,
-}
-
-interface EntryOrAsset {
-  entry?: {
-    entry: Entry,
-    contentType: ContentType,
-    displayField: string
-  },
-  asset?: Asset
-}
-
-interface WrapperProps {
-  sdk: EditorExtensionSDK,
-  id?: string,
-  linkType?: string,
-  data?: EntryOrAsset,
-  entry?: {
-    entry: Entry,
-    contentType: ContentType,
-    displayField: string
-  },
-  asset?: Asset
-}
-
-interface ConfigState {
-  fields: object,
-  entry: any
-}
-
-interface EntryState {
-  entry?: Entry,
-  contentType?: ContentType,
-  displayField?: string
-}
-
-class LinkWrapper extends React.Component<WrapperProps> {
-  render() {
-    if (this.props.linkType === 'Asset') {
-      return <AssetWrapper id={this.props.id} sdk={this.props.sdk} asset={this.props.data?.asset} />
-    } else if (this.props.linkType === 'Entry') {
-      return <EntryWrapper id={this.props.id} sdk={this.props.sdk} entry={this.props.data?.entry} />
-    } else {
-      return <></>
-    }
-  }
-}
-
-class AssetWrapper extends React.Component <WrapperProps> {
-  render() {
-    return ((this.props.asset && (
-      <img src={this.props.asset.fields.file[this.props.sdk.locales.default].url} alt={this.props.asset.fields.title[this.props.sdk.locales.default]} />
-    )) || <></>)
-  }
-}
-
-class EntryWrapper extends React.Component <WrapperProps, EntryState> {
-  render() {
-    return ((this.props.entry?.entry && (<>
-      Links to <a href={"https://app.contentful.com/spaces/" + this.props.sdk.ids.space + "/entries/" + this.props.id} target="_new">
-        {this.props.entry?.entry.fields[this.props.entry.displayField || ''][this.props.sdk.locales.default]}
-      </a> [{this.props.entry?.contentType?.name || ''}]
-    </>)) || <></>)
-  }
-}
+import { LinkWrapper } from './LinkWrapper'
 
 export default class EntryEditor extends React.Component <EditorProps, ConfigState> {
   async componentDidMount() {
@@ -85,9 +19,7 @@ export default class EntryEditor extends React.Component <EditorProps, ConfigSta
   }
 
   async getFieldValue(field: string, i: number) {
-
     let fieldValue = this.props.sdk.entry.fields[field].getValue()
-    let renderedHTML: string = ''
 
     // let's not handle these now, we need a case later for all of the field types
     switch(this.props.sdk.entry.fields[field].type) {
@@ -95,92 +27,79 @@ export default class EntryEditor extends React.Component <EditorProps, ConfigSta
       case 'Text':
       case 'Integer':
       case 'Number':
-        renderedHTML = fieldValue
-        break
+        return fieldValue
       case 'Date':
         //convert the date to a more readable format
-        renderedHTML = new Date(fieldValue).toISOString().split('T')[0]
-        break
+        return new Date(fieldValue).toISOString().split('T')[0]
       case 'Location':
         // render the location on a Google Map
         // todo: use different key
         let lat = fieldValue.lat
         let long = fieldValue.lon
-        renderedHTML = '<img src="https://maps.googleapis.com/maps/api/staticmap?center='
+        return '<img src="https://maps.googleapis.com/maps/api/staticmap?center='
           + lat + ',' + long + '&zoom=12&size=200x200&markers=color:red%7Clabel:Location%7C'
           + lat + ',' + long + '&key=AIzaSyDKWGl_R9LCIbyDfjd4HWAJXlA-i40HFLo" />'
-        break
       case 'Boolean':
-        renderedHTML = fieldValue ? 'true' : 'false'
-        break
+        return fieldValue ? 'true' : 'false'
       case 'Link':
-        let data: EntryOrAsset | undefined = {}
-        if (fieldValue.sys.linkType === 'Entry') {
-          let entry: Entry = await this.props.sdk.space.getEntry(fieldValue.sys.id)
-          let contentType: ContentType = await this.props.sdk.space.getContentType(entry.sys.contentType.sys.id)
-          let displayField = contentType.displayField
-
-          data.entry = {entry, contentType, displayField}
-        } else if (fieldValue.sys.linkType === 'Asset') {
-          data.asset = await this.props.sdk.space.getAsset(fieldValue.sys.id)
-        }
-        renderedHTML = ReactDOMServer.renderToStaticMarkup(<LinkWrapper id={fieldValue.sys.id} linkType={fieldValue.sys.linkType} data={data} sdk={this.props.sdk} />)
-        break
+        return await this.renderLinkAsHTMLComponent(fieldValue, fieldValue.sys.linkType)
       case 'RichText':
         //convert the Rich Text to HTML
         //tod: inline entry, entry, asset
-        renderedHTML = documentToHtmlString(fieldValue)
-        break
+        return documentToHtmlString(fieldValue)
       case 'Object':
-        renderedHTML = JSON.stringify(fieldValue)
-        break
+        return JSON.stringify(fieldValue)
       case 'Array':
-        // the type is Array, and we hav a link
-        // then it can only be entry or asset
-        if (Array.isArray(fieldValue) && this.props.sdk.entry.fields[field].items?.type === 'Link') {
-          let helper: any = Object.values(fieldValue)
-          let linkType = this.props.sdk.entry.fields[field].items?.linkType
-          if (!!linkType) {
-            let linkComponents: any[] = []
-            for (let j = 0; j < helper.length; j++) {
-              debugger
-              let element = helper[j]
-              let data: EntryOrAsset | undefined = {}
-              if (element.sys.linkType === 'Entry') {
-                let entry: Entry = await this.props.sdk.space.getEntry(element.sys.id)
-                let contentType: ContentType = await this.props.sdk.space.getContentType(entry.sys.contentType.sys.id)
-                let displayField = contentType.displayField
-
-                data.entry = {entry, contentType, displayField}
-              } else if (element.sys.linkType === 'Asset') {
-                data.asset = await this.props.sdk.space.getAsset(element.sys.id)
-              }
-              let component = <LinkWrapper id={element.sys.id} linkType={linkType} data={data} sdk={this.props.sdk} />
-              let componentAsString = ReactDOMServer.renderToStaticMarkup(component)
-              linkComponents.push(componentAsString)
-            }
-            renderedHTML = linkComponents.join('<br />')
-          }
-        } else {
-          renderedHTML = fieldValue.join(', ')
-        }
-        break
-      default: renderedHTML = 'Not properly defined'
+        return await this.renderArray(field, fieldValue)
+      default:
+        return 'Not properly defined'
     }
-    //return the updated value to be rendered on the page
-    return renderedHTML
   }
 
-  async getAsset() {
+  async renderArray(field: string, array: any[]): Promise<string> {
+    if (Array.isArray(array) && this.props.sdk.entry.fields[field].items?.type === 'Link') {
+      let helper: any = Object.values(array)
+      let linkType = this.props.sdk.entry.fields[field].items?.linkType
+      let linkComponents: any[] = []
 
+      for (let j = 0; j < helper.length; j++) {
+        linkComponents.push(await this.renderLinkAsHTMLComponent(helper[j], linkType))
+      }
+
+      return linkComponents.join('<br />')
+    }
+    return array.join(', ')
+  }
+
+  async renderLinkAsHTMLComponent(link: LinkProps, linkType?: string): Promise<string> {
+    let data: EntryOrAsset = {}
+    if (link.sys.linkType === 'Entry') {
+      data.entry = await this.getEntry(link)
+    } else if (link.sys.linkType === 'Asset') {
+      data.asset = await this.getAsset(link)
+    }
+    let component = <LinkWrapper id={link.sys.id} linkType={linkType} data={data} sdk={this.props.sdk} />
+    return ReactDOMServer.renderToStaticMarkup(component)
+  }
+
+  async getEntry(link: LinkProps): Promise<EntryState> {
+    let entry: Entry = await this.props.sdk.space.getEntry(link.sys.id)
+    let contentType: ContentType = await this.props.sdk.space.getContentType(entry.sys.contentType.sys.id)
+    let displayField = contentType.displayField
+
+    return {entry, contentType, displayField}
+  }
+
+  async getAsset(link: LinkProps): Promise<Asset> {
+    return await this.props.sdk.space.getAsset(link.sys.id)
   }
 
   setContainer = (keyName: string, i: number) => {
     return (
-      <div className='container' id={'mydiv'+i.toString()} key={i}>
-      <div className='containerItem' id={'mydiv' + i + 'header'}></div>
-      <div className = 'fieldName'>{this.props.sdk.entry.fields[keyName].id}
-      <div className='toggleElment' id={'mydiv' + i + 'toggl'} onClick={() => this.toggleElement(i)}>x</div></div>
+      <div className='container' id={'mydiv' + i.toString()} key={i}>
+        <div className='containerItem' id={'mydiv' + i + 'header'}></div>
+        <div className='fieldName'>{this.props.sdk.entry.fields[keyName].id}
+        <div className='toggleElment' id={'mydiv' + i + 'toggl'} onClick={() => this.toggleElement(i)}>x</div></div>
       </div>
     )
   }
@@ -268,22 +187,18 @@ export default class EntryEditor extends React.Component <EditorProps, ConfigSta
       <Workbench.Header
       actions={
         <Select name="optionSelect" id="optionSelect" width="medium">
-        <Option value="" disabled>
-        Select a predefined size...
-        </Option>
-        <Option value="optionOne">Mobile</Option>
-        <Option value="optionTwo">Tablet</Option>
-        <Option value="optionThree">Desktop</Option>
+          <Option value="" disabled>Select a predefined size...</Option>
+          <Option value="optionOne">Mobile</Option>
+          <Option value="optionTwo">Tablet</Option>
+          <Option value="optionThree">Desktop</Option>
         </Select>
       }
       />
       <Workbench.Content>
       <Typography>
-      {
-        Object.keys(this.props.sdk.entry.fields).map((keyName, i) => (
-          this.setContainer(keyName, i)
-        ))
-      }
+        {
+          Object.keys(this.props.sdk.entry.fields).map((keyName, i) => this.setContainer(keyName, i))
+        }
       </Typography>
       </Workbench.Content>
       </Workbench>
